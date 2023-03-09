@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id     Int     @id @default(autoincrement())
+  email  String  @unique
+  name   String?
+  images Image[]
+}
+
+model Image {
+  id       Int       @id @default(autoincrement())
+  filepath String
+  label    String
+  User     User      @relation(fields: [userId], references: [id])
+  userId   Int
+  polygons Polygon[]
+}
+
+model Polygon {
+  id      String  @id
+  xList   Float[]
+  yList   Float[]
+  color   String
+  Image   Image   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId Int
+}
