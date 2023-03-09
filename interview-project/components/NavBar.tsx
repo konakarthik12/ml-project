@@ -1,12 +1,10 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import {usePathname} from "next/navigation";
 
 export default function NavBar() {
   const { data: session } = useSession();
-  let signedIn = false;
-  if (session && session.user) {
-    signedIn = true;
-  }
+  const pathname = usePathname();
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -66,34 +64,25 @@ export default function NavBar() {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>Home</a>
+            <Link href="/">Home</Link>
           </li>
-          {/*<li tabIndex={0}>*/}
-          {/*  <a>*/}
-          {/*    Parent*/}
-          {/*    <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>*/}
-          {/*  </a>*/}
-          {/*<ul className="p-2">*/}
-          {/*  <li><a>Submenu 1</a></li>*/}
-          {/*  <li><a>Submenu 2</a></li>*/}
-          {/*</ul>*/}
-          {/*</li>*/}
+
           <li >
             <Link href="/images">Images</Link>
           </li>
 
           <li>
-            <a>Segmentation</a>
+            <Link href="/segment">Segmentation</Link>
           </li>
           <li>
-            <a>Classification</a>
+            <Link href="/classify">Classification</Link>
           </li>
         </ul>
       </div>
       <div className="navbar-end">
-        <a className="btn" onClick={() => signOut()}>
+        {pathname!== '/login' && <a className="btn" onClick={() => signOut()}>
           Sign Out
-        </a>
+        </a>}
       </div>
     </div>
   );

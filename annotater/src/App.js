@@ -39,13 +39,13 @@ const App = () => {
     }
 
     return (
-        <ReactImageAnnotate
-            labelImages
-            images={response}
-
-            onExit={saveAnnotations}
-            hideClone={true}
-        />
+            <ReactImageAnnotate
+                labelImages
+                images={response}
+                onExit={saveAnnotations}
+                hideClone={true}
+                enabledTools={['create-polygon']}
+            />
     );
 };
 

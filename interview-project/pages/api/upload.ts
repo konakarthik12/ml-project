@@ -1,13 +1,14 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 import formidable from "formidable";
 import fs from "fs";
 import prisma from "@/lib/prismadb";
-import { join } from "path";
+import {join} from "path";
+
 export const upload_dir = "/uploads/";
 export const image_dir = join(upload_dir, "images");
 
 if (!fs.existsSync(image_dir)) {
-  fs.mkdirSync(image_dir, { recursive: true });
+  fs.mkdirSync(image_dir, {recursive: true});
 }
 const form = formidable({
   keepExtensions: true,
@@ -24,9 +25,13 @@ function parseForm(
         return;
       }
 
-      resolve({ fields, files });
+      resolve({fields, files});
     });
   });
+}
+
+function saveImage() {
+
 }
 
 export default async function handler(
@@ -37,7 +42,7 @@ export default async function handler(
     res.status(405).end();
     return;
   }
-  const { fields, files } = await parseForm(req);
+  const {fields, files} = await parseForm(req);
   const label = fields["label"] as string;
   const filepath = files["image"].filepath;
 
@@ -52,6 +57,20 @@ export default async function handler(
       },
     },
   });
+  for (const blur of [8, 32, 64]) {
+
+    await prisma.image.create({
+      data: {
+        label: `${label} blur ${blur}`,
+        filepath: filepath + "?blur=" + blur,
+        User: {
+          connect: {
+            id: 1,
+          },
+        },
+      },
+    });
+  }
   res.status(200).end();
 }
 

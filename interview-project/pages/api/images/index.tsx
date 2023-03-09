@@ -1,5 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/lib/prismadb";
+import path from "path";
 
 function decodePoints(points) {
   const xList = [];
@@ -10,7 +11,7 @@ function decodePoints(points) {
       yList.push(y);
     }
   }
-  return { xList, yList };
+  return {xList, yList};
 }
 
 function encodePoints(xList, yList) {
@@ -33,8 +34,8 @@ export default async function handler(
       const polygons = image?.regions
         ?.filter((r) => r.type === "polygon")
         .map((r) => {
-          const { xList, yList } = decodePoints(r.points);
-          return { id: r.id, color: r.color, xList, yList, imageId: image.id };
+          const {xList, yList} = decodePoints(r.points);
+          return {id: r.id, color: r.color, xList, yList, imageId: image.id};
         });
       await prisma.polygon.deleteMany({
         where: {
@@ -45,7 +46,7 @@ export default async function handler(
         data: polygons,
       });
     }
-    res.json({ ok: true });
+    res.json({ok: true});
   } else if (req.method === "GET") {
     const images = await prisma.image.findMany({
       where: {
@@ -58,7 +59,7 @@ export default async function handler(
 
     const data = images.map((img) => ({
       id: img.id,
-      src: img.filepath,
+      src: new URL(path.basename(img.filepath), 'https://ml-project.imgix.net/').href,
       name: img.label,
       regions: img.polygons.map((p) => ({
         id: p.id,
@@ -78,7 +79,7 @@ export default async function handler(
         }
       });
       res.status(200).end();
-  }
+    }
     res.status(405).end();
   }
 }

@@ -47,19 +47,19 @@ export function Upload() {
   );
 }
 
-export function Img({ id, name, src }) {
-  const { mutate } = useSWR("/api/images");
-  const deleteImage = async ({ id }) => {
-    const res = await fetch(`/api/images/${id}`, {
+export function Img({id, name, src}) {
+  const {mutate} = useSWR("/api/images");
+  const deleteImage = async ({id}) => {
+    const res = await fetch(`/api/images?id=${id}`, {
       method: "DELETE",
     });
     if (res.status === 200) {
-     await mutate();
+      await mutate();
     }
   }
   return (
     <div className="relative w-[200px] h-[200px] border-black border-4">
-      <Image fill alt="Mountains" src={src} sizes="100px" />
+      <Image fill alt="Mountains" src={src} sizes="100px"/>
       <span className="absolute top-0 left-0 bg-black text-white p-2">
         {name}
       </span>
@@ -71,16 +71,16 @@ export function Img({ id, name, src }) {
 }
 
 export default function Images() {
-  const { data, error } = useSWR("/api/images");
+  const {data, error} = useSWR("/api/images");
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <div className="flex flex-col items-center">
         <h1 className="text-2xl text-center mb-3">Images</h1>
         <div className="flex space-x-3">
-          {data && data.map(({ name, src, id }) => <Img key={id} id={id} name={name} src={src} />)}
+          {data && data.map(({name, src, id}) => <Img key={id} id={id} name={name} src={src}/>)}
         </div>
       </div>
-      <Upload />
+      <Upload/>
     </div>
   );
 }
