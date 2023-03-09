@@ -19,7 +19,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rm -rf ../interview-project/public/annotator && mv build ../interview-project/public/annotator && rm -rf build",
+    "build": "react-scripts build",
+    "build:dev": "npm run build && rm -rf ../interview-project/public/annotator && mv build ../interview-project/public/annotator && rm -rf build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
